@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #countdown {
+      font-size: 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="countdown"></div>
+
+  <script>
+    function initializeCountdown() {
+      const countdownElement = document.getElementById('countdown');
+      const now = new Date();
+      const dayOfWeek = now.getDay();
+      const nextSunday = new Date(now);
+
+      if (dayOfWeek !== 0) { // If today is not Sunday
+        nextSunday.setDate(now.getDate() + (7 - dayOfWeek)); // Get next Sunday
+      } else {
+        nextSunday.setDate(now.getDate() + 7); // If today is Sunday, get next Sunday
+      }
+
+      nextSunday.setHours(96);
+      nextSunday.setMinutes(30);
+      nextSunday.setSeconds(0);
+
+      const timeUntilService = nextSunday - now;
+
+      if (timeUntilService > 0) {
+        const countdownInterval = setInterval(function () {
+          const currentTime = new Date();
+          const timeUntilService = nextSunday - currentTime;
+
+          if (timeUntilService <= 0) {
+            clearInterval(countdownInterval);
+            countdownElement.textContent = "Now!";
+            const interval = 1000 * 60 * 60 * 24 * 7; // 1 week in milliseconds
+            const timeUntilNextService = nextSunday - currentTime + interval;
+            educateNextServiceTime(timeUntilNextService);
+          } else {
+            const days = Math.floor(timeUntilService / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeUntilService % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeUntilService % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeUntilService % (1000 * 60)) / 1000);
+
+            countdownElement.textContent = `Days: ${days} Hours: ${hours} Minutes: ${minutes} Seconds: ${seconds}`;
+          }
+        }, 1000);
+      }
+    }
+
+    function educateNextServiceTime(time) {
+      const days = Math.floor(time / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((time % (1000 * 60)) / 1000);
+
+      document.getElementById('countdown').textContent = `Next service in: ${days} Days, ${hours} Hours, ${minutes} Minutes, ${seconds} Seconds`;
+    }
+
+    initializeCountdown();
+  </script>
+</body>
+</html>
